@@ -1,0 +1,14 @@
+{
+  "command": "vehicle.inspect",
+  "targets": [
+    {
+      "assetPath": "Assets/Testing/Vehicles/SimpleRetroCar_Test.prefab"
+    }
+  ],
+  "fields": [
+    "ArcadeVehicleDrive.maxSpeedKph",
+    "VehicleSuspension.wheelRadius",
+    "VehicleSuspension.groundMask"
+  ],
+  "limit": 20
+}

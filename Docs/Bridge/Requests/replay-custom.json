@@ -1,0 +1,29 @@
+{
+  "command": "drive.test",
+  "scenario": "custom",
+  "repeat": 2,
+  "steps": [
+    {
+      "ticks": 100
+    },
+    {
+      "ticks": 100,
+      "throttle": 1
+    },
+    {
+      "ticks": 45,
+      "throttle": 0.5,
+      "steering": 0.85,
+      "handbrake": true
+    },
+    {
+      "ticks": 200,
+      "throttle": 0.25
+    },
+    {
+      "ticks": 150,
+      "brake": 1,
+      "brakePressed": true
+    }
+  ]
+}

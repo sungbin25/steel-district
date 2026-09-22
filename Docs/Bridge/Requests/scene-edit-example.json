@@ -1,0 +1,13 @@
+{
+  "command": "scene.edit",
+  "apply": false,
+  "save": false,
+  "targets": [ { "assetPath": "Assets/Scene/Tests/BridgeSandbox.unity" } ],
+  "operations": [
+    { "op": "create", "name": "Props", "optional": true },
+    { "op": "create", "name": "Crate", "parent": "Props", "primitive": "Cube", "position": "0,0.5,4", "scale": "1,1,1", "optional": true },
+    { "op": "addComponent", "path": "Props/Crate", "component": "Rigidbody", "optional": true },
+    { "op": "set", "path": "Props/Crate", "component": "Rigidbody", "property": "m_Mass", "value": "40" },
+    { "op": "set", "path": "Props/Crate", "component": "MeshRenderer", "property": "m_Materials.Array.data[0]", "value": "asset:Assets/Testing/Materials/TrackSurface.mat" }
+  ]
+}

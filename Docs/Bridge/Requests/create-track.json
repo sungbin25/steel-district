@@ -1,0 +1,10 @@
+{
+  "command": "track.create",
+  "apply": true,
+  "targets": [
+    {
+      "assetPath": "Assets/Scene/GameScene.unity",
+      "hierarchyPath": "Simple Retro Car"
+    }
+  ]
+}

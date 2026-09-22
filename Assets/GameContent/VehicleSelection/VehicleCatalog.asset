@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61e675bf621c32842a05231e301651ec, type: 3}
+  m_Name: VehicleCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::SteelDistrict.Vehicles.VehicleCatalog
+  vehicles:
+  - id: simple-retro
+    displayName: Simple Retro
+    drivePrefab: {fileID: 8024736838101813722, guid: 83a41995212bc9f49aaf63582c4c34ae, type: 3}
+    previewPrefab: {fileID: 7736205969497564472, guid: 69220f9c4f96f58499c1576669cfd153, type: 3}
+    availableInPrototype: 1
+  - id: prometheus
+    displayName: Prometheus
+    drivePrefab: {fileID: 6282463546305585218, guid: 852bb9fba714c3f4ca00d48a71ed0590, type: 3}
+    previewPrefab: {fileID: 1219099326073199509, guid: ddd7558e70d70aa499b9f63a8a98711b, type: 3}
+    availableInPrototype: 1

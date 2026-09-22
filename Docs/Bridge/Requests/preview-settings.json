@@ -1,0 +1,16 @@
+{
+  "command": "vehicle.apply",
+  "apply": false,
+  "targets": [
+    {
+      "assetPath": "Assets/Testing/Vehicles/SimpleRetroCar_Test.prefab"
+    }
+  ],
+  "changes": [
+    {
+      "component": "ArcadeVehicleDrive",
+      "property": "maxSpeedKph",
+      "value": "130"
+    }
+  ]
+}
