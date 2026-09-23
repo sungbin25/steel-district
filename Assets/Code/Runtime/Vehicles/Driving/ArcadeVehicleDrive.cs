@@ -2,6 +2,14 @@ using UnityEngine;
 
 namespace SteelDistrict.Vehicles
 {
+    // 0은 기존 차량의 네 바퀴 구동을 유지하는 값입니다. 저장 데이터 호환을 위해 번호를 바꾸지 않습니다.
+    public enum VehicleDriveType
+    {
+        [InspectorName("4륜 구동 (AWD)")] AllWheel = 0,
+        [InspectorName("전륜 구동 (FWD)")] FrontWheel = 1,
+        [InspectorName("후륜 구동 (RWD)")] RearWheel = 2
+    }
+
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Rigidbody), typeof(VehicleDriveInput), typeof(VehicleSuspension))]
     public sealed class ArcadeVehicleDrive : MonoBehaviour
@@ -12,6 +20,8 @@ namespace SteelDistrict.Vehicles
         [SerializeField] private VehicleSuspension suspension;
         // 주행 단위: 속도 km/h, 가속도 m/s², 응답 시간 s.
         [Header("기본 주행")]
+        [Tooltip("전륜은 앞 두 바퀴, 후륜은 뒤 두 바퀴, 4륜은 네 바퀴에 전진·후진 구동력을 배분합니다. 모두 접지하면 총 구동력은 같습니다. 구동 바퀴가 뜨면 해당 몫의 힘은 사라집니다. 일반 제동은 네 바퀴, 핸드브레이크는 뒤 바퀴에 적용됩니다.")]
+        [SerializeField] private VehicleDriveType driveType = VehicleDriveType.AllWheel;
         [Tooltip("이 속도에 가까워질수록 가속력이 줄어듭니다. 내리막이나 충돌로 넘을 수 있는 목표 속도입니다.")]
         [SerializeField, Min(1)] private float maxSpeedKph = 120;
         [Tooltip("후진 가속력이 줄어드는 기준 속도입니다.")]
@@ -48,6 +58,7 @@ namespace SteelDistrict.Vehicles
         private float steering, rearGrip = 1, assistWeight = 1, suppressionTime;
         private bool reversing;
         public Rigidbody Body => body;
+        public VehicleDriveType DriveType => driveType;
         // 메뉴는 실제 프리팹 설정을 표시하며 측정하지 않은 성능 점수를 만들지 않습니다.
         public float TargetMaxSpeedKph => maxSpeedKph;
         public float AccelerationSetting => acceleration;
@@ -59,6 +70,30 @@ namespace SteelDistrict.Vehicles
         public float RearGrip => rearGrip;
         public int GroundedWheels => suspension == null ? 0 : suspension.GroundedCount;
         public bool IsReversing => reversing;
+
+        public void CaptureConfiguration(VehicleConfiguration value)
+        {
+            value.driveType=driveType;
+            value.maxSpeedKph=maxSpeedKph; value.reverseSpeedKph=reverseSpeedKph; value.acceleration=acceleration;
+            value.brakeAcceleration=brakeAcceleration; value.coastingDeceleration=coastingDeceleration;
+            value.turnRate=turnRate; value.steeringResponse=steeringResponse; value.gripRecovery=gripRecovery;
+            value.maximumGripAcceleration=maximumGripAcceleration; value.oversteerStartKph=oversteerStartKph;
+            value.highSpeedRearGrip=highSpeedRearGrip; value.handbrakeRearGrip=handbrakeRearGrip;
+            value.gripRestoreSeconds=gripRestoreSeconds; value.handbrakeDeceleration=handbrakeDeceleration;
+            value.centerOfMass=centerOfMass;
+        }
+        public void ApplyConfiguration(VehicleConfiguration value)
+        {
+            driveType=value.driveType;
+            maxSpeedKph=value.maxSpeedKph; reverseSpeedKph=value.reverseSpeedKph; acceleration=value.acceleration;
+            brakeAcceleration=value.brakeAcceleration; coastingDeceleration=value.coastingDeceleration;
+            turnRate=value.turnRate; steeringResponse=value.steeringResponse; gripRecovery=value.gripRecovery;
+            maximumGripAcceleration=value.maximumGripAcceleration; oversteerStartKph=value.oversteerStartKph;
+            highSpeedRearGrip=value.highSpeedRearGrip; handbrakeRearGrip=value.handbrakeRearGrip;
+            gripRestoreSeconds=value.gripRestoreSeconds; handbrakeDeceleration=value.handbrakeDeceleration;
+            centerOfMass=value.centerOfMass;
+            GetComponent<Rigidbody>().centerOfMass=centerOfMass;
+        }
 
         private void Awake()
         {
@@ -112,10 +147,12 @@ namespace SteelDistrict.Vehicles
             }
             else if (reversing)
                 drive = -command.Brake * acceleration * 0.65f * Mathf.Clamp01(1 - Mathf.Max(0, -ForwardSpeed) / (reverseSpeedKph / 3.6f));
+            // 엔진 구동과 일반 감속을 분리해 비구동 바퀴도 기존처럼 제동합니다.
+            float deceleration = 0;
             if (braking)
-                drive = -Mathf.Sign(ForwardSpeed) * Mathf.Min(speed / dt, brakeAcceleration);
+                deceleration = -Mathf.Sign(ForwardSpeed) * Mathf.Min(speed / dt, brakeAcceleration);
             else if (command.Throttle <= 0 && !reversing)
-                drive = -Mathf.Sign(ForwardSpeed) * Mathf.Min(speed / dt, coastingDeceleration);
+                deceleration = -Mathf.Sign(ForwardSpeed) * Mathf.Min(speed / dt, coastingDeceleration);
 
             float desiredYaw = steering * turnRate * Mathf.Deg2Rad * Mathf.Clamp01(speed / 2) *
                 Mathf.Lerp(1, 0.4f, Mathf.Clamp01(speed / (maxSpeedKph / 3.6f))) * Mathf.Sign(ForwardSpeed);
@@ -147,12 +184,18 @@ namespace SteelDistrict.Vehicles
                 float loadFactor = Mathf.Clamp(wheel.Load / (body.mass * Physics.gravity.magnitude / 4), 0, 1.5f);
                 float lateral = Mathf.Clamp(-wheel.LateralSpeed / gripRecovery,
                     -maximumGripAcceleration * grip, maximumGripAcceleration * grip) * loadFactor * assistWeight;
-                float longitudinal = drive;
+                // 힘 계산의 질량은 바퀴당 mass/4이므로 2륜은 구동 바퀴당 2배로 배분합니다.
+                // 뜬 바퀴의 몫을 재분배하지 않아 비구동 축만 접지했을 때 추진하지 않습니다.
+                float driveFactor = driveType == VehicleDriveType.AllWheel ? 1 :
+                    (driveType == VehicleDriveType.FrontWheel && !rear ||
+                     driveType == VehicleDriveType.RearWheel && rear ? 2 : 0);
+                float longitudinal = deceleration;
                 bool locked = speed > 0.6f && (braking || (rear && command.Handbrake));
                 if (rear && command.Handbrake)
                     longitudinal -= Mathf.Sign(wheel.ForwardSpeed) * Mathf.Min(Mathf.Abs(wheel.ForwardSpeed) / dt, handbrakeDeceleration * 2);
                 if (locked && braking) lateral *= 0.55f;
-                body.AddForceAtPosition((forward * longitudinal + tireRight * lateral) * (body.mass / 4),
+                // 엔진 힘은 조향된 타이어 방향으로 전달해 앞/뒤 구동 축의 차이가 힘과 회전에 반영됩니다.
+                body.AddForceAtPosition((tireForward * (drive * driveFactor) + forward * longitudinal + tireRight * lateral) * (body.mass / 4),
                     wheel.Hub, ForceMode.Force);
                 wheel.AngularSpeed = locked ? 0 : wheel.ForwardSpeed / suspension.Radius;
                 float longitudinalSlip = wheel.ForwardSpeed - wheel.AngularSpeed * suspension.Radius;

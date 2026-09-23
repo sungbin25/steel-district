@@ -12,6 +12,7 @@ namespace SteelDistrict.Editor
         {
             { "input", "운전 입력" },
             { "suspension", "서스펜션" },
+            { "driveType", "구동 방식" },
             { "maxSpeedKph", "전진 목표 최고속도 (km/h)" },
             { "reverseSpeedKph", "후진 목표 최고속도 (km/h)" },
             { "acceleration", "가속도 (m/s²)" },

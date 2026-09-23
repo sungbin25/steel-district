@@ -4164,6 +4164,7 @@ MonoBehaviour:
   catalog: {fileID: 11400000, guid: f922eace9e27c694b80bbe2c6d85d0ac, type: 2}
   originalVehicle: {fileID: 614473040062643822}
   prometheusVehicle: {fileID: 642287924513488345}
+  spawnPoint: {fileID: 0}
   followCamera: {fileID: 910001004}
 --- !u!4 &1723903246
 Transform:
@@ -5528,15 +5529,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 642287924513488345}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 8.599633, y: 0, z: 2.59}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4466888474962987698}
   - {fileID: 6399581920980048803}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &397983127997889007
 GameObject:
   m_ObjectHideFlags: 0
@@ -5592,8 +5593,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 614473040062643822}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.815709, y: -0.00000048084723, z: -0.0639906}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -8.67, y: -0.00000048084723, z: 2.64}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5603,7 +5604,7 @@ Transform:
   - {fileID: 6247190323446044452}
   - {fileID: 4178505312739687133}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &642287924513488345
 GameObject:
   m_ObjectHideFlags: 0

@@ -455,7 +455,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8024736838101813722}
   serializedVersion: 5
-  m_Mass: 1000
+  m_Mass: 1700
   m_LinearDamping: 0
   m_AngularDamping: 0.1
   m_CenterOfMass: {x: 0, y: 0.45, z: 0.15}
@@ -500,7 +500,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: {fileID: 4578497505054853056}
   suspension: {fileID: 5328845703909646998}
-  maxSpeedKph: 120
+  driveType: 1
+  maxSpeedKph: 150
   reverseSpeedKph: 30
   acceleration: 14
   brakeAcceleration: 24

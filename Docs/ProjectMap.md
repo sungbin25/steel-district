@@ -13,7 +13,7 @@ Assets/Code/
 │  │  ├─ Driving/ArcadeVehicleDrive.cs
 │  │  ├─ Suspension/VehicleSuspension.cs
 │  │  ├─ Effects/VehicleTireEffects.cs
-│  │  └─ Catalog/VehicleCatalog.cs
+│  │  └─ Catalog/                   # VehicleCatalog · VehicleConfiguration · VehiclePurchaseTransaction
 │  ├─ Camera/VehicleFollowCamera.cs
 │  ├─ UI/                           # 차량 목록·미리보기·성능 표시
 │  ├─ Scenes/                       # 출전 선택 상태·메뉴/월드 전환
@@ -22,7 +22,7 @@ Assets/Code/
    ├─ Vehicles/VehicleInspectors.cs
    ├─ Bridge/                       # JSON 명령·프리팹 검사/변경·PowerShell 클라이언트
    ├─ Testing/VehicleTestTrack.cs
-   ├─ Menu/MainMenuSetup.cs
+   ├─ Menu/                         # MainMenuSetup · VehiclePrefabOrganization · VehicleShowroomSetup · MainMenuAuthoring/ViewBuilder · VehicleShopSetup
    └─ Validation/                   # 기존 차량·입력 재생·브리지·Play Mode 검증
 ```
 
@@ -33,6 +33,7 @@ Assets/Code/
 | 문서 | 책임 | 읽는 시점 |
 |---|---|---|
 | [CurrentState](CurrentState.md) | 구현·미구현·확인할 문제·검증 상태 | 새 작업 시작 |
+| [Collaboration](Collaboration.md) | GitHub 동기화·Codex/Claude 교대·인계 | 도구 교대와 업로드 작업 |
 | [PlatformAndPerformance](PlatformAndPerformance.md) | PC·Android/iOS 범위·저사양 60 FPS·전환 준비 | 플랫폼·렌더링·입력·네트워크·최적화 작업 |
 | [Vehicle](Vehicle.md) | 차량 구성과 모듈 간 데이터 흐름 | 차량 전체 동작 변경 |
 | [Input](Input.md) | 키 입력과 명령 스냅샷 | 조작·입력 변경 |
@@ -54,7 +55,10 @@ Assets/Code/
 |---|---|
 | `Assets/Scene/GameScene.unity` | 현재 차량 개발 씬. Simple Retro Car와 Main Camera |
 | `Assets/Scene/MainMenuScene.unity` | 빌드 첫 씬. 차량 선택과 미리보기 |
-| `Assets/GameContent/VehicleSelection/` | 두 차량 주행/표시 프리팹·카탈로그·미리보기 조명 |
+| `Assets/GameContent/VehicleSelection/` | 차량 카탈로그·미리보기 조명 |
+| `Assets/Prefabs/Vehicles/SimpleRetro/`, `Assets/Prefabs/Vehicles/Prometheus/` | 차종별 주행·표시 프리팹. 초기 능력치는 주행 프리팹에서 편집 |
+| `Assets/Prefabs/Environment/MenuParking.prefab` | GameScene에서 복제한 주차장 원본. MainMenuScene의 MenuParking 인스턴스를 편집하며 런타임은 활성 상태만 전환 |
+| `Assets/UI/Fonts/` | 메뉴용 한글 TTF·OFL 라이선스·출처 |
 | `Assets/OutdoorsScene.unity` | 기존 빌드 등록을 보존한 씬. 메인 진입 흐름에서는 사용하지 않음 |
 | `Assets/Scene/Tests/VehicleTestTrack.unity` | 반복 주행 시험장. 빌드 목록에 자동 추가하지 않음 |
 | `Assets/Testing/` | 시험 차량 프리팹·시험장 재질 |

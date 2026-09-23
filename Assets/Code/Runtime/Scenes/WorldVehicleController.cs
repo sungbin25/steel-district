@@ -10,31 +10,37 @@ namespace SteelDistrict.Scenes
     public sealed class WorldVehicleController : MonoBehaviour
     {
         [Tooltip("메인 화면과 같은 차량 카탈로그입니다.")] public VehicleCatalog catalog;
-        [Tooltip("GameScene의 기존 Simple Retro Car입니다. 기본 차량 선택 시 그대로 사용합니다.")] public GameObject originalVehicle;
-        [Tooltip("GameScene에 배치된 Prometheus입니다. 선택 시 시작 위치로 옮겨 사용합니다.")] public GameObject prometheusVehicle;
+        [Tooltip("기존 차량은 시작 위치/방향만 제공하고 실행 시 비활성화됩니다. 능력치는 프리팹과 세션 데이터에서 가져옵니다.")] public GameObject originalVehicle;
+        [Tooltip("이전 씬 배치 차량입니다. 중복 실행을 막기 위해 비활성화합니다.")] public GameObject prometheusVehicle;
+        [Tooltip("다른 월드 씬에서 사용할 시작 지점입니다. 비워 두면 기존 차량 또는 이 객체의 위치를 사용합니다.")] public Transform spawnPoint;
         [Tooltip("실제로 생성된 차량에 다시 연결할 기존 추적 카메라입니다.")] public VehicleFollowCamera followCamera;
         public GameObject ActiveVehicle { get; private set; }
         private Text status;
         private bool inputBlocked;
         private void Awake()
         {
-            var entry = catalog != null ? catalog.Find(VehicleSession.SelectedId) : null;
-            bool fromMenu = entry != null && entry.IsValid && entry.availableInPrototype;
-            if (entry == null || !entry.IsValid || !entry.availableInPrototype) entry = catalog != null ? catalog.DefaultVehicle : null;
-            if (entry == null || originalVehicle == null || followCamera == null)
+            // 도착 씬에 같은 ID의 다른 설정이 있어도 메뉴/차고에서 확정한 구성을 우선합니다.
+            var entry = VehicleSession.ResolveSelected(catalog);
+            if (entry == null || !entry.IsValid || followCamera == null)
             { VehicleSession.Error = "차량/카메라 연결이 없습니다."; return; }
-            VehicleSession.Select(entry);
+            var configuration=VehicleSession.GetConfiguration(entry);
+            if(configuration==null || !configuration.IsValid) { VehicleSession.Error="차량 능력치가 유효하지 않습니다."; return; }
+            var spawn=spawnPoint != null ? spawnPoint : originalVehicle != null ? originalVehicle.transform : transform;
+            Vector3 position=spawn.position; Quaternion rotation=spawn.rotation;
             if (prometheusVehicle != null) prometheusVehicle.SetActive(false);
-            if (!fromMenu) ActiveVehicle = originalVehicle;
-            else
+            if (originalVehicle != null) originalVehicle.SetActive(false);
+            // Awake 이전에 능력치를 적용하도록 비활성 부모 아래에서 생성합니다.
+            var staging=new GameObject("Vehicle Configuration Staging"); staging.SetActive(false);
+            try
             {
-                originalVehicle.SetActive(false);
-                // 메뉴에 표시한 프리팹을 그대로 생성하여 수치와 실제 출전 구성이 어긋나지 않게 합니다.
-                ActiveVehicle = Instantiate(entry.drivePrefab);
-                ActiveVehicle.transform.SetPositionAndRotation(originalVehicle.transform.position, originalVehicle.transform.rotation);
+                ActiveVehicle = Instantiate(entry.drivePrefab, staging.transform);
+                configuration.Apply(ActiveVehicle);
+                ActiveVehicle.transform.SetPositionAndRotation(position,rotation);
                 ActiveVehicle.name = entry.displayName;
+                ActiveVehicle.transform.SetParent(null,true);
                 ActiveVehicle.SetActive(true);
             }
+            finally { Destroy(staging); }
             followCamera.SetTarget(ActiveVehicle.transform);
         }
         private void Start()

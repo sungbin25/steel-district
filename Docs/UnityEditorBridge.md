@@ -39,6 +39,16 @@ Unity 프로젝트를 열고 컴파일을 완료하면 InitializeOnLoad가 로�
 
 메뉴 명령의 범위와 제한은 [VehicleSelection](VehicleSelection.md)을 참조한다. setup은 이미 구성된 카탈로그를 덮어쓰지 않는다. rebuildPreviews는 지정된 표시 프리팹 내용을 재생성하므로 apply=false로 범위를 확인하고 호출한다.
 
+`vehicle.organizePrefabs`는 기존 SimpleRetro/Prometheus의 주행·표시 프리팹 4개를 `Assets/Prefabs/Vehicles/<차종>/`로 이동한다. apply=false는 사전 검사, apply=true는 이동이다. 이미 이동된 항목은 건너뛰며 GUID 보존·변경 전후 경로·개수·실패 원인을 반환한다. 충돌/미저장 프리팹은 거부하고, 도중 실패 시 완료한 이동을 되돌린다. 씬을 열거나 저장하지 않고 주행시험도 실행하지 않는다.
+
+`menu.setupShowroom`은 GameScene 표시 환경 복제·MainMenuScene 슬롯 연결·초기 보유값 설정을 수행한다. apply=false로 범위를 확인한 뒤 apply=true로 저장하며, 메뉴/카탈로그 백업 경로를 반환한다. `menu.inspectShowroom`은 저장된 메뉴를 Preview Scene으로 읽어 환경/슬롯/카탈로그/표시 모델을 검사하고 닫는다. 두 명령 모두 주행을 실행하지 않는다. 상세 범위와 초기값 재설정 주의는 [VehicleSelection](VehicleSelection.md)을 따른다.
+
+`menu.materializeUI`는 Main Menu UI를 최초 생성해 씬에 저장하고 그림자 방향광을 Preview Key 하나로 정리한다. 기존 UI는 재생성하지 않는다. `menu.inspectUI`는 UI 참조·영구 MonoScript GUID·한글 글리프·단일 방향광 그림자를 정적으로 검사한다. `menu.repairUIReferences`는 열린 메뉴의 초기 비영구 포인터/빈 글꼴 참조만 복구하며, dirty 상태도 저장용 복사본으로 백업한 뒤 현재 편집 상태를 보존하여 저장한다. 세 명령 모두 주행/물리/Play를 실행하지 않는다.
+
+`menu.materializeParking`은 열린 MainMenuScene에 편집 가능한 MenuParking 프리팹 인스턴스를 배치하고 VehiclePreview.environmentRoot에 연결한다. 미저장 상태를 복사본으로 백업하며 기존 인스턴스/오버라이드를 보존한다. 슬롯은 월드 위치를 유지하며 배경 하위로 옮긴다. 재실행 시 중복 생성하지 않는다. `menu.inspectShowroom`은 원본 에셋 대신 저장된 씬 인스턴스와 슬롯 부모 관계를 검사한다.
+
+`menu.setupShop`은 골드/구매 UI와 왼쪽 하단 성능 그래프를 최초 구성한다. 기존 UI 구성 이후에는 배치를 덮어쓰지 않는다. `menu.checkShop`은 독립 변수로 구매의 성공/거부 상태 변경을 검사하고 저장된 씬 참조와 골드/가격 범위를 확인한다. 현재 세션 잔액·소유권을 변경하거나 주행을 실행하지 않는다.
+
 로그 조회는 Unity Console 전체 과거 기록의 복원이 아니다. 현재 도메인에서 받은 최근 500개를 보관하고 연속 중복을 집계한다. `level: "Warning"` 등의 필터와 limit을 사용할 수 있다. 도메인 재로드 전·브리지 설치 전의 로그는 Editor 로그 파일에서 확인한다.
 
 ## 요청 형식

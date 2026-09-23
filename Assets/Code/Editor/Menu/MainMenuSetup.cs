@@ -19,8 +19,9 @@ namespace SteelDistrict.Editor.Bridge
     {
         public const string Root = "Assets/GameContent/VehicleSelection";
         public const string CatalogPath = Root + "/VehicleCatalog.asset";
-        public const string PrometheusPath = Root + "/Prometheus_Drive.prefab";
-        public const string RetroPath = Root + "/SimpleRetro_Drive.prefab";
+        public const string PrefabRoot = "Assets/Prefabs/Vehicles";
+        public const string PrometheusPath = PrefabRoot + "/Prometheus/Prometheus_Drive.prefab";
+        public const string RetroPath = PrefabRoot + "/SimpleRetro/SimpleRetro_Drive.prefab";
         private static readonly List<string> created = new List<string>();
         public static void SetInitialPreviewLighting()
         {
@@ -40,7 +41,7 @@ namespace SteelDistrict.Editor.Bridge
             foreach(var entry in catalog.vehicles)
             {
                 string path=AssetDatabase.GetAssetPath(entry.previewPrefab);
-                if(!path.StartsWith(Root+"/",StringComparison.Ordinal)) throw new InvalidOperationException("범위 밖 미리보기: "+path);
+                if(!path.StartsWith(PrefabRoot+"/",StringComparison.Ordinal)) throw new InvalidOperationException("범위 밖 미리보기: "+path);
                 result.values.Add(new BridgeValue {target=path,before="표시용 구성",after="주행/입력/물리 없는 표시용 구성",changed=true});
             }
             if(!request.apply) return;
@@ -91,7 +92,8 @@ namespace SteelDistrict.Editor.Bridge
                 if(result.issues.Any(x=>x.severity=="error")) throw new InvalidOperationException("기존 차량 검사 실패");
                 if(game.GetRootGameObjects().Any(x=>x.GetComponent<WorldVehicleController>()!=null) || menu.GetRootGameObjects().Any(x=>x.GetComponent<MainMenuController>()!=null))
                     throw new InvalidOperationException("기존 메뉴/월드 컨트롤러가 있습니다.");
-                Directory.CreateDirectory(Root); AssetDatabase.Refresh();
+                Directory.CreateDirectory(Root);
+                Directory.CreateDirectory(PrefabRoot+"/SimpleRetro"); Directory.CreateDirectory(PrefabRoot+"/Prometheus"); AssetDatabase.Refresh();
                 Undo.RegisterFullObjectHierarchyUndo(prom,"Prometheus 주행 연결");
                 ConfigurePrometheus(prom,retro);
                 var temporary=EditorSceneManager.NewPreviewScene();
@@ -100,8 +102,8 @@ namespace SteelDistrict.Editor.Bridge
                 {
                     retroPrefab=Export(retro,RetroPath,temporary,false);
                     promPrefab=Export(prom,PrometheusPath,temporary,false);
-                    retroPreview=Export(retro,Root+"/SimpleRetro_Preview.prefab",temporary,true);
-                    promPreview=Export(prom,Root+"/Prometheus_Preview.prefab",temporary,true);
+                    retroPreview=Export(retro,PrefabRoot+"/SimpleRetro/SimpleRetro_Preview.prefab",temporary,true);
+                    promPreview=Export(prom,PrefabRoot+"/Prometheus/Prometheus_Preview.prefab",temporary,true);
                 }
                 finally { EditorSceneManager.ClosePreviewScene(temporary); }
                 var catalog=ScriptableObject.CreateInstance<VehicleCatalog>();

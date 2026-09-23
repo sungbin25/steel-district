@@ -601,7 +601,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6282463546305585218}
   serializedVersion: 5
-  m_Mass: 950
+  m_Mass: 1500
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -671,17 +671,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: {fileID: 697744423659227756}
   suspension: {fileID: 5098072456566829096}
-  maxSpeedKph: 120
-  reverseSpeedKph: 30
-  acceleration: 14
-  brakeAcceleration: 24
+  driveType: 2
+  maxSpeedKph: 200
+  reverseSpeedKph: 50
+  acceleration: 20
+  brakeAcceleration: 35
   coastingDeceleration: 1.2
-  turnRate: 100
-  steeringResponse: 0.12
+  turnRate: 61.9
+  steeringResponse: 0.09
   gripRecovery: 0.18
-  maximumGripAcceleration: 15
-  oversteerStartKph: 50
-  highSpeedRearGrip: 0.48
+  maximumGripAcceleration: 25
+  oversteerStartKph: 80
+  highSpeedRearGrip: 0.5
   handbrakeRearGrip: 0.12
   gripRestoreSeconds: 0.55
   handbrakeDeceleration: 5

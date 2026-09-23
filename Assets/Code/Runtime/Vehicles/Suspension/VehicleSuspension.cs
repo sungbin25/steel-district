@@ -42,6 +42,16 @@ namespace SteelDistrict.Vehicles
         public int GroundedCount { get; private set; }
         public float Radius => wheelRadius;
         public float Travel => travel;
+        public void CaptureConfiguration(VehicleConfiguration value)
+        {
+            value.wheelRadius=wheelRadius; value.travel=travel; value.springFrequency=springFrequency;
+            value.dampingRatio=dampingRatio; value.antiRoll=antiRoll; value.groundMask=groundMask.value;
+        }
+        public void ApplyConfiguration(VehicleConfiguration value)
+        {
+            wheelRadius=value.wheelRadius; travel=value.travel; springFrequency=value.springFrequency;
+            dampingRatio=value.dampingRatio; antiRoll=value.antiRoll; groundMask=value.groundMask;
+        }
         public bool IsReady { get; private set; }
         private void Awake() => Initialize();
 

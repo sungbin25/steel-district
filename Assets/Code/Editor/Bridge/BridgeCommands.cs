@@ -15,9 +15,9 @@ namespace SteelDistrict.Editor.Bridge
     public static class BridgeCommands
     {
         // 배포된 브리지 코드가 컴파일·로드되었는지 editor.status의 logScope로 확인합니다. 브리지 코드 변경 시 갱신합니다.
-        public const string Version = "2026-09-23.5";
+        public const string Version = "2026-09-23.10";
         public static readonly string[] Names = { "bridge.commands", "editor.status", "editor.console", "object.inspect", "vehicle.inspect", "vehicle.apply", "track.create", "drive.test", "menu.setup", "menu.rebuildPreviews", "editor.refresh",
-            "scene.hierarchy", "scene.edit", "scene.open", "scene.close", "scene.new", "scene.save" };
+            "menu.setupShop", "menu.checkShop", "menu.materializeParking", "menu.repairUIReferences", "menu.materializeUI", "menu.inspectUI", "menu.inspectShowroom", "menu.setupShowroom", "vehicle.organizePrefabs", "scene.hierarchy", "scene.edit", "scene.open", "scene.close", "scene.new", "scene.save" };
         internal static readonly Dictionary<string, Type> Types = new Dictionary<string, Type>
         {
             { "ArcadeVehicleDrive", typeof(ArcadeVehicleDrive) }, { "VehicleSuspension", typeof(VehicleSuspension) },
@@ -42,6 +42,15 @@ namespace SteelDistrict.Editor.Bridge
                         throw new InvalidOperationException("컴파일/에셋 갱신 중입니다. 완료 후 새 요청으로 실행하세요.");
                     if (request.command == "vehicle.apply") Apply(request, result);
                     else if (request.command == "track.create") VehicleTestTrack.Create(request, result);
+                    else if (request.command == "vehicle.organizePrefabs") VehiclePrefabOrganization.Run(request, result);
+                    else if (request.command == "menu.setupShowroom") VehicleShowroomSetup.Run(request, result);
+                    else if (request.command == "menu.inspectShowroom") VehicleShowroomSetup.Inspect(result);
+                    else if (request.command == "menu.materializeParking") VehicleShowroomSetup.Materialize(request,result);
+                    else if (request.command == "menu.setupShop") VehicleShopSetup.Apply(request,result);
+                    else if (request.command == "menu.checkShop") VehicleShopSetup.Check(result);
+                    else if (request.command == "menu.materializeUI") MainMenuAuthoring.Apply(request,result);
+                    else if (request.command == "menu.inspectUI") MainMenuAuthoring.Inspect(result);
+                    else if (request.command == "menu.repairUIReferences") MainMenuAuthoring.RepairReferences(request,result);
                     else if (request.command == "menu.setup") MainMenuSetup.Create(request, result);
                     else if (request.command == "menu.rebuildPreviews") MainMenuSetup.RebuildPreviews(request, result);
                     else if (request.command.StartsWith("scene.", StringComparison.Ordinal)) BridgeSceneCommands.Execute(request, result);

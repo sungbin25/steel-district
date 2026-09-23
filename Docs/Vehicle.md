@@ -15,7 +15,7 @@
 
 ## 데이터 흐름
 
-Prometheus도 같은 주행 모듈을 사용한다. 차종 카탈로그와 두 차량 주행/표시 프리팹은 `Assets/GameContent/VehicleSelection/`에 있다. 메뉴에서 진입할 때 선택한 프리팹을 생성하고 기존 배치 차량을 비활성화한다. 연결·튜닝 기준은 [VehicleSelection](VehicleSelection.md)을 따른다.
+Prometheus도 같은 주행 모듈을 사용한다. 카탈로그는 `Assets/GameContent/VehicleSelection/`, 주행/표시 프리팹은 `Assets/Prefabs/Vehicles/<차종>/`에 있다. 월드 진입 시 선택한 주행 프리팹에 공통 `VehicleConfiguration`을 적용하고 기존 배치 차량을 비활성화한다. 구동방식(전륜·후륜·4륜)도 공통 설정에 포함된다. 연결·튜닝 기준은 [VehicleSelection](VehicleSelection.md), 구동력 배분은 [Driving](Driving.md)을 따른다.
 
 ```text
 Input System → VehicleDriveInput.Update → VehicleDriveCommand

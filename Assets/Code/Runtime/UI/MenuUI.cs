@@ -10,7 +10,7 @@ namespace SteelDistrict.UI
     {
         public static readonly Color Ink = new Color(.035f, .05f, .075f);
         public static readonly Color Panel = new Color(.07f, .095f, .13f);
-        public static readonly Color Accent = new Color(.76f, .98f, .32f);
+        public static readonly Color Accent = new Color(.08f, .76f, 1f);
         private static Font font;
         // OS 글꼴은 현재 PC 프로토타입용입니다. 모바일 배포 전 재배포 가능한 한글 폰트를 에셋으로 지정해야 합니다.
         public static Font Font => font != null ? font : font = UnityEngine.Font.CreateDynamicFontFromOSFont(

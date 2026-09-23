@@ -4,11 +4,13 @@
 
 ## 현재 구현
 
-빌드 첫 씬은 `Assets/Scene/MainMenuScene.unity`, 월드는 `Assets/Scene/GameScene.unity`다. VehicleSession이 세션 내 출전 차종 ID와 비동기 단일 씬 전환을 관리한다. WorldVehicleController는 카탈로그 프리팹 한 대를 생성하고 기존 배치 차량 두 대를 비활성화하며 카메라를 연결한다. 직접 GameScene을 실행할 때는 개발용 Simple Retro를 사용한다. 메뉴 복귀 버튼과 Esc를 제공한다. 사용법은 [VehicleSelection](VehicleSelection.md)을 따른다.
+빌드 첫 씬은 `Assets/Scene/MainMenuScene.unity`, 월드는 `Assets/Scene/GameScene.unity`다. VehicleSession이 세션 내 출전 차종 ID·차종별 확정 능력치·프리팹 참조와 비동기 단일 씬 전환을 관리한다. WorldVehicleController는 주행 프리팹 한 대를 비활성 상태에서 생성하고 확정 능력치를 적용한 뒤 활성화한다. 기존 배치 차량 두 대는 비활성화하고 카메라를 연결한다. 직접 GameScene을 실행해도 카탈로그 기본 차량과 같은 경로를 사용한다. 다른 주행 씬은 해당 컨트롤러·카메라·시작 지점과 빌드 등록이 필요하다. 메뉴 복귀 버튼과 Esc를 제공한다. 사용법과 차고 적용 API는 [VehicleSelection](VehicleSelection.md)을 따른다.
 
-현재 Bootstrap·영구 저장·온라인 세션/소유권 서비스는 없다. 임시 출전 ID는 게임 재시작 시 초기화된다. 기존 OutdoorsScene 빌드 등록은 보존했다. 씬 경로/차량 필수 연결 오류와 중복 진입은 처리하지만 서버 접속·손상 저장 복구까지 구현된 것은 아니다.
+현재 Bootstrap·영구 저장·온라인 세션/소유권 서비스는 없다. 임시 출전 ID와 확정 능력치는 게임 재시작 시 초기화된다. 차종별 초기값은 주행 프리팹, 세션 중 확정값은 VehicleSession에 두며 도착 씬의 튜닝으로 덮어쓰지 않는다. 기존 OutdoorsScene 빌드 등록은 보존했다. 씬 경로/차량 필수 연결 오류와 중복 진입은 처리하지만 서버 접속·손상 저장 복구까지 구현된 것은 아니다.
 
 이전 입력 명령·Contacts·연기·자국은 런타임 일시 상태다. 직렬화된 Inspector 값은 사용자 세이브 파일과 다르다.
+
+골드와 차량 구매 소유권도 VehicleSession에서 유지한다. 기본 시작 골드 1,000,000은 첫 초기화에만 지급하며 씬 왕복으로 재지급하지 않는다. 차종별 기본 가격 10,000과 시작 골드는 VehicleCatalog.asset에서 조정한다. 구매 성공 시 차감/소유를 동시에 변경하고 메뉴 목록을 갱신한다. 세션 재시작 시 초기화하며 아직 디스크 저장/서버 판정은 없다.
 
 ## 후속 설계 기준 — 미구현 제안
 

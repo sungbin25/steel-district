@@ -14,7 +14,8 @@
 | Editor/Bridge | BridgeCommands.cs, EditorBridge.cs, Tools/Invoke-UnityBridge.ps1 | [Editor Bridge](../../Docs/UnityEditorBridge.md) |
 | Editor/Testing | VehicleTestTrack.cs | [시험장](../../Docs/TestTrack.md) |
 | Runtime/Testing | VehicleReplayDriver.cs | [입력 재생](../../Docs/TestTrack.md) |
-| Runtime/Vehicles/Catalog, Runtime/UI, Runtime/Scenes | VehicleCatalog.cs, MainMenuController.cs, VehicleSession.cs, WorldVehicleController.cs | [차량 선택](../../Docs/VehicleSelection.md) |
+| Runtime/Vehicles/Catalog, Runtime/UI, Runtime/Scenes | VehicleCatalog.cs, VehicleConfiguration.cs, MainMenuController.cs, VehicleSession.cs, WorldVehicleController.cs | [차량 선택](../../Docs/VehicleSelection.md) |
+| Runtime/UI, Editor/Menu | MainMenuView.cs, PreviewPointer.cs, MainMenuAuthoring.cs, MainMenuViewBuilder.cs — 저장된 UI 편집/검사 | [차량 선택](../../Docs/VehicleSelection.md) |
 | Editor/Menu | MainMenuSetup.cs | [메뉴 구성](../../Docs/VehicleSelection.md) |
 
 차량 전체 연결은 [Vehicle.md](../../Docs/Vehicle.md), 저장·씬 이동의 현재 상태와 후속 설계는 [SaveAndScene.md](../../Docs/SaveAndScene.md)를 참조한다.
